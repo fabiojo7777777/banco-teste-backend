@@ -1,0 +1,6 @@
+2020-02-21 17:04:33 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" already exists; SQL statement:
+create table users(username varchar_ignorecase(50) not null primary key,password varchar_ignorecase(500) not null,enabled boolean not null) [42101-200]
+2020-02-22 01:57:53 jdbc[144]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "USERS[*]"; expected "UPDATE, USE, {"; SQL statement:
+USERS [42001-197]
