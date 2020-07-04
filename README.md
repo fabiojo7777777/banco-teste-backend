@@ -1,2 +1,2 @@
 # banco-teste-backend
-Projeto somente para fins didáticos
+Projeto de testes somente para fins didáticos
