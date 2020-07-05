@@ -19,11 +19,16 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.bancotestebackend.entities.Conta;
 import br.com.bancotestebackend.entities.LancamentoExtrato;
 import br.com.bancotestebackend.entities.Transferencia;
+import br.com.bancotestebackend.exception.NegocioException;
+import br.com.bancotestebackend.infra.ServiceResponse;
 
 @RestController
 @RequestMapping("/conta")
 public class ContaResource
 {
+    private static final String            ACESSO_SALDO           = "BK1";
+    private static final String            ACESSO_EXTRATO         = "BK2";
+    private static final String            ACESSO_TRANSFERENCIA   = "BK3";
     private static List<Conta>             listaConta             = new Vector<Conta>();
     private static List<LancamentoExtrato> listaLancamentoExtrato = new ArrayList<LancamentoExtrato>();
     private static long                    sequencial             = 0;
@@ -57,13 +62,17 @@ public class ContaResource
     public ServiceResponse<List<Conta>> listarContas(
             @RequestParam("codigoAgencia") Long pCodigoAgencia,
             @RequestParam("numeroConta") Long pNumeroConta)
+            throws NegocioException
     {
+        LoginResource.verificarAcesso(ACESSO_SALDO);
         return saldo(pCodigoAgencia, pNumeroConta);
     }
 
     @RequestMapping(value = "/contas", method = RequestMethod.GET)
     public ServiceResponse<List<Conta>> listarContas()
+            throws NegocioException
     {
+        LoginResource.verificarAcesso(ACESSO_SALDO);
         return saldo(null, null);
     }
 
@@ -92,8 +101,11 @@ public class ContaResource
             @RequestParam("codigoAgencia") Long codigoAgencia,
             @RequestParam("numeroConta") Long numeroConta,
             @RequestParam("dataMovimento") String txtData)
-            throws ParseException
+            throws ParseException,
+            NegocioException
     {
+        LoginResource.verificarAcesso(ACESSO_SALDO);
+        LoginResource.verificarAcesso(ACESSO_EXTRATO);
         SimpleDateFormat  sdf           = new SimpleDateFormat("yyyy-MM");
         Date              data          = sdf.parse(txtData);
         GregorianCalendar dataMovimento = new GregorianCalendar();
@@ -122,8 +134,12 @@ public class ContaResource
 
     @RequestMapping(value = "/transferencia", method = RequestMethod.POST)
     public ServiceResponse<Void> extrato(@RequestBody Transferencia transferencia)
-            throws ParseException
+            throws ParseException,
+            NegocioException
     {
+        LoginResource.verificarAcesso(ACESSO_SALDO);
+        LoginResource.verificarAcesso(ACESSO_EXTRATO);
+        LoginResource.verificarAcesso(ACESSO_TRANSFERENCIA);
         synchronized (ContaResource.class)
         {
             Long              codigoAgenciaOrigem = transferencia.getContaOrigem().getCodigoAgencia();

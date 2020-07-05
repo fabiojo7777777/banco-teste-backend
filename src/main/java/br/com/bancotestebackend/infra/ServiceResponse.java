@@ -1,4 +1,4 @@
-package br.com.bancotestebackend.resources;
+package br.com.bancotestebackend.infra;
 
 import java.util.ArrayList;
 import java.util.List;
